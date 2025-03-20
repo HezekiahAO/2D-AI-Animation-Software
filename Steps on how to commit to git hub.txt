@@ -5,6 +5,7 @@ How to add a file to your GitHub repository.
     git push origin main
 
 and that does it
+
 and if you want to remove a file 
     
     git rm --cached "file-you-want-to-remove"
