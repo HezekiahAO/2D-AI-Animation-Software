@@ -76,3 +76,16 @@ print(Number_1)
 
 greetings = str("Hi, how are you doing ?")
 print(greetings)
+print(greetings.upper())
+print(greetings.lower())
+
+# Question 5 Format strings in different ways. using f-string
+x = 10
+y = 20
+print(f"The sum of {x} and {y} is {x + y}.")
+
+
+# Quuestion 6 Create a list, access elements using indexing and slicing, and perform list operations (append, remove, pop, sort, reverse)
+List_example = ["Hannah", "Daivd", "Key"]
+# to confirm if its a list
+print(type(List_example))
