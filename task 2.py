@@ -65,10 +65,14 @@ l = d // e
 print(l)
 
 
-# Convert between different numeric types using int() and float
+# Question 3 Convert between different numeric types using int() and float
 
 Number = int(29479.8883405783)
 print(Number)
 Number_1 = float(198)
 print(Number_1)
 
+# Question 4 Use string methods to manipulate text
+
+greetings = str("Hi, how are you doing ?")
+print(greetings)
