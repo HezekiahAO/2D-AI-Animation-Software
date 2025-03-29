@@ -14,17 +14,25 @@ for i in range(1,16):
 
 # A simple calculator
 
-a = input(int("Enter a number"))
-b = input(int("Enter another number"))
+a = int(input("Enter a number:  "))
+b = int(input("Enter another number:  "))
 
-operation = input("Enter an operation +, -, *, /")
+operation = input("Enter an operation +, -, *, /:  ")
+
 if operation == "+":
-   print(a + b)
+   print( "addition =  ",a + b)
 
 elif operation == "-":
-     print(a-b)
+     print("Subtraction =   ",a-b)
 
 elif operation == "*":
-    print(a*b)
+    print("Multiplication =  ",a*b)
 else:
-     print(a/b)
+     print( "Divison =   ",a/b)
+
+try:
+     a = int(input("Enter a number:\n"))
+except ValueError:
+     print("Wrong parameter to enter")
+a = 0
+print("The value of a is:  ", a)
