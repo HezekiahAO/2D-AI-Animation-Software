@@ -14,7 +14,8 @@ for i in range(1,16):   #The last number will be 15
 
 # A simple calculator
 
-try:
+try:  # Basic error handling using try–except 
+
      a = int(input("Enter a number:  "))
      b = int(input("Enter another number:  "))   # Uses input() to get two numbers from the user and convert them to integers (or floats).
 
@@ -33,7 +34,6 @@ try:
      else:
           print( "Divison =   ",a/b)                      # Using an if–elif–else block to perform the corresponding operation.
 
-                                                # Basic error handling using try–except 
 except ValueError:
      print("Hello :(   Please Enter only Integers. Example 3, 2, 1,")
 except ZeroDivisionError:
