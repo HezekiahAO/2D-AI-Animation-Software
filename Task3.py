@@ -14,25 +14,27 @@ for i in range(1,16):   #The last number will be 15
 
 # A simple calculator
 
-a = int(input("Enter a number:  "))
-b = int(input("Enter another number:  "))   # Uses input() to get two numbers from the user and convert them to integers (or floats).
+try:
+     a = int(input("Enter a number:  "))
+     b = int(input("Enter another number:  "))   # Uses input() to get two numbers from the user and convert them to integers (or floats).
 
-operation = input("Enter an operation +, -, *, /:  ")   # Asking the user to choose an operation by typing one of the following symbols: +, -, *, or /.
+     operation = input("Enter an operation +, -, *, /:  ")   # Asking the user to choose an operation by typing one of the following symbols: +, -, *, or /.
 
-if operation == "+":
-   print( "addition =  ",a + b)
 
-elif operation == "-":
-     print("Subtraction =   ",a-b)
 
-elif operation == "*":
-    print("Multiplication =  ",a*b)
-else:
-     print( "Divison =   ",a/b)                      # Using an if–elif–else block to perform the corresponding operation.
+     if operation == "+":
+          print( "addition =  ",a + b)
 
-try:                                                # Basic error handling using try–except 
-     a = int(input("Enter a number:\n"))
+     elif operation == "-":
+          print("Subtraction =   ",a-b)
+
+     elif operation == "*":
+       print("Multiplication =  ",a*b)
+     else:
+          print( "Divison =   ",a/b)                      # Using an if–elif–else block to perform the corresponding operation.
+
+                                                # Basic error handling using try–except 
 except ValueError:
-     print("Wrong parameter to enter")
-a = 0
-print("The value of a is:  ", a)
+     print("Hello :(   Please Enter only Integers. Example 3, 2, 1,")
+except ZeroDivisionError:
+     print("Naaaa, Please dont try to divide by zero, Use a real number!!")
