@@ -19,7 +19,7 @@ try:  # Basic error handling using try–except
      a = int(input("Enter a number:  "))
      b = int(input("Enter another number:  "))   # Uses input() to get two numbers from the user and convert them to integers (or floats).
 
-     operation = input("Enter an operation +, -, *, /:  ")   # Asking the user to choose an operation by typing one of the following symbols: +, -, *, or /.
+     operation = input("Enter an operation such as +, -, *, /:     ")   # Asking the user to choose an operation by typing one of the following symbols: +, -, *, or /.
 
 
 
