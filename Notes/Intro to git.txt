@@ -1,3 +1,8 @@
+This file contains both my notes and the GitHub notes merged together.
+
+
+
+
 Git helps keep track of the change that has been made. 
     Since it keeps track of a change, you can go back to the beginning of the code and change something.
     Git is a Version Control system : ie keeps track of your diferent cahnges.
@@ -37,11 +42,11 @@ and if you want to remove a file
     
     git rm --cached "file-you-want-to-remove"
   
-    git rm --cached to remove all files
-does it.
+    git rm --cached to remove all files.
 
 
-git log --oneline -n 5
+git log --oneline -n 
+
 helps you know what are the files on your online repository.
 
 git remote -v shows where the code is been commited to
@@ -51,12 +56,8 @@ git remote set-url origin "Link to the new repo"  : this is to add you codes to 
 
 
 
-
-
-
-
-
 How to create a pull request on github from vs code
 create a branch using git checkout -b "Whatever name you want to call your branch"
 then
 git push origin "Whatever name you want to call your branch"
+helps you know what are the files on your online repository.
