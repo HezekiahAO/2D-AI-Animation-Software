@@ -8,6 +8,9 @@ import string   # This is what allowes me to test for symbols in this code
 
 special_symbol = string.punctuation   
 
+
+#def password_checker(password):
+
 has_upper = any(char.isupper() for char in password)
 has_digit = any(char.isdigit() for char in password)
 has_symbol = any(char in special_symbol for char in password) 
@@ -16,15 +19,15 @@ has_symbol = any(char in special_symbol for char in password)
 if len(password) < 8:
     print("Please enter an 8 digit passeword or more:    ")
 
-if not any(char.isupper() for char in password) == False :
-    print("Please include at least an upper Case in your password  ")
+elif any(char.isupper() for char in password) == False :
+    print("Please include at least an upper Case in your password  ")                   #THIS TEST IF THE PASSWORD MEETS ANY OF REQUIREMENT AT ALL
 
 
-if not any(char.isdigit() for char in password) == False :
+elif any(char.isdigit() for char in password) == False :
     print("Please include at least a digit in your password  ")
 
 
-if not any(char in special_symbol for char in password) == False :
+elif any(char in special_symbol for char in password) == False :
     print("Please include a Special Character in your password.   Na for security :) ")
 
 else:
@@ -35,7 +38,7 @@ else:
 # This aspect of code is specifically testing the strength of the password
 
 
-strength = sum(has_upper, has_digit, has_symbol)
+strength = sum([has_upper, has_digit, has_symbol])  # coverted the variables to a list and gets there arithmetic sum which i now use to test fro the strength
 
 if strength >= 3 and len(password) >=8:
     print("Password Strength is Strong   ")
