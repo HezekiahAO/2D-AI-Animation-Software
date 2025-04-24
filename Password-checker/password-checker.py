@@ -20,7 +20,7 @@ if len(password) < 8:
     print("Please enter an 8 digit passeword or more:    ")
 
 elif any(char.isupper() for char in password) == False :
-    print("Please include at least an upper Case in your password  ")                   #THIS TEST IF THE PASSWORD MEETS ANY OF REQUIREMENT AT ALL
+    print("Please include at least an upper Case in your password")                   # This line of the code test if any of the conidtions are met at all
 
 
 elif any(char.isdigit() for char in password) == False :
@@ -38,12 +38,12 @@ else:
 # This aspect of code is specifically testing the strength of the password
 
 
-strength = sum([has_upper, has_digit, has_symbol])  # coverted the variables to a list and gets there arithmetic sum which i now use to test fro the strength
+strengt = sum([has_upper, has_digit, has_symbol])  # coverted the variables to a list and gets there arithmetic sum which i now use to test fro the strength
 
-if strength >= 3 and len(password) >=8:
+if strengt >= 3 and len(password) >=8:
     print("Password Strength is Strong   ")
 
-elif strength == 2 and len(password) >=8:
+elif strengt == 2 and len(password) >=8:
     print("Password has medium Strength   ")
     
 else:
