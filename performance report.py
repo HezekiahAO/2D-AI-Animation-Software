@@ -18,34 +18,36 @@ for name, score in get_scores():
 
 # Recursive funtion to compute the average score
 
-def get_scores():
+def get_students():
     students = (
         {"name": "Alice", "scores": [70, 80, 90]},
         {"name": "Bob", "scores": [60, 75, 85]},
         {"name": "David", "scores": [50, 23, 90]},
-        {"name": "Hezekiah", "scores": [100, 100, 100]}
-    )
-
+        {"name": "Hezekiah", "scores": [100, 100, 100]})
+    
     for student in students:
-        for score in student["scores"]:
-            yield score  # this is the same code form the first but i just yield scores un this to allow me to get an average
-
+            yield student # yield each full student dictionary 
 
 def average_score(students):
-
-    scores = students[scores] # access the list of scores at the beginning and gets the required value
-
-    length = len(scores) # i used this to get the length of the student scores
-
+    scores = students["scores"] # access the list of scores at the beginning and gets the required value
+    length = len(scores) # I used this to get the length of the student scores
     total = sum(scores)  # Sums the total length of the scores
-
-    print("Number of scores:", length)
-
     average = total / length
-    print("The Average score of the students is " ,average)
+    
+    print(f"This is {student['name']} average score:  {average}")   # This takes the entire list of students, and pick out each student one by one and getting their average
 
-for students in get_scores():
-    average_score(students)       # This helps me loop through all the student and then compute their average score
+for student in get_students():   
+    average_score(student)    
 
 
+
+    # Decoreators
+def Log(retry):
+    print(get_scores)
+
+    retry()   # This was my attempt to retry n times Retries the function n times if it raises an exception.   I think i am missing a couple of things
+    if  retry == ValueError:
+        return n +=1  # retrys n times       
+retry()     # I could need some help here
    
+
