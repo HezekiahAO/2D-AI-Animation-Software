@@ -41,13 +41,5 @@ for student in get_students():
 
 
 
-    # Decoreators
-def Log(retry):
-    print(get_scores)
 
-    retry()   # This was my attempt to retry n times Retries the function n times if it raises an exception.   I think i am missing a couple of things
-    if  retry == ValueError:
-        return n +=1  # retrys n times       
-retry()     # I could need some help here
-   
 
