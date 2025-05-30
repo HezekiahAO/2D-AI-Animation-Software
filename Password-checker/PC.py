@@ -28,7 +28,7 @@ elif any(char.isdigit() for char in password) == False :
 
 
 elif any(char in special_symbol for char in password) == False :
-    print("Please include a Special Character in your password.   Na for security :) ")
+    print("Please include a Special Character in your password. ")
 
 else:
     print("Your Password has been Created!  ")
