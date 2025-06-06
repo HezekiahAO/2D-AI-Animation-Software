@@ -48,5 +48,5 @@ elif strengt == 2 and len(password) >=8:
     
 else:
     print("Your Password is Weak   ")   
-        
+
 # This aspect of code is specifically testing the strength of the password
