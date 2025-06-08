@@ -40,6 +40,17 @@ for student in get_students():
     average_score(student)    
 
 
-
-
+# ---------------------- DECORATOR ---------------------
+def Log(retries=3):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for attempt in range(1, retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    print(f"Attempt {attempt} failed: {e}")
+            raise Exception(f"Function failed after {retries} retries.")
+        return wrapper
+    return decorator
+   
 
