@@ -72,12 +72,14 @@ class MainWindow(QMainWindow):
         self.undo_btn = QPushButton("Undo")
         self.save_btn = QPushButton("Save Frame")
         self.play_btn = QPushButton("Play")
+        self.export_btn = QPushButton("Export as GIF")
 
         self.prev_btn.clicked.connect(self.prev_frame)
         self.next_btn.clicked.connect(self.next_frame)
         self.undo_btn.clicked.connect(self.canvas.undo_last_path)
         self.save_btn.clicked.connect(self.save_frame)
         self.play_btn.clicked.connect(self.play_animation)
+        self.export_btn.clicked.connect(self.export_gif)
 
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.undo_btn)
@@ -86,6 +88,7 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.next_btn)
         button_layout.addWidget(self.save_btn)
         button_layout.addWidget(self.play_btn)
+        button_layout.addWidget(self.export_btn)
 
         layout = QVBoxLayout()
         layout.addLayout(button_layout)
@@ -96,7 +99,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
         self.update_frame_label()
-
         self.is_playing = False
 
         self.play_timer = QTimer()
@@ -116,18 +118,15 @@ class MainWindow(QMainWindow):
         next_index = self.current_frame + 1
 
         if self.is_playing:
-        # If we've reached the last frame or the next frame is empty, loop back to the beginning
             if next_index >= self.canvas.get_frame_count() or not self.canvas.frames[next_index]:
-               self.current_frame = 0
-               self.canvas.set_frame(self.current_frame)
-               self.update_frame_label()
-               return
+                self.current_frame = 0
+                self.canvas.set_frame(self.current_frame)
+                self.update_frame_label()
+                return
 
         self.current_frame = next_index
         self.canvas.set_frame(self.current_frame)
         self.update_frame_label()
-
-
 
     def save_frame(self):
         if not (0 <= self.current_frame < self.canvas.get_frame_count()):
@@ -147,17 +146,56 @@ class MainWindow(QMainWindow):
 
     def play_animation(self):
         if not self.canvas.get_frame_count():
-            print("❌ No frames to play.    Add some drawings first.")
+            print("❌ No frames to play. Add some drawings first.")
             return
         if self.play_timer.isActive():
-            self.play_timer.isActive()
             self.play_timer.stop()
             self.play_btn.setText("Play")
-            self.is_playing = False    # This line of code is used to stop the timer when we click the play again to avoid enless loop
+            self.is_playing = False
         else:
-            self.is_playing = True # Once enless loop is avoided, we can now start the drawing on a new frame
-            self.play_timer.start(100)  # Frames plays faster at 6.6 fps   10 frames/sec.   Hence 50 frames/sec = 5fps
+            self.is_playing = True
+            self.play_timer.start(100)  # 10 fps = 100ms per frame
             self.play_btn.setText("Pause")
+
+    def export_gif(self):
+        from PIL import Image
+
+        frames = []
+        canvas_size = self.canvas.size()
+        width, height = canvas_size.width(), canvas_size.height()
+
+        for i, paths in enumerate(self.canvas.frames):
+            if not paths:
+                continue
+
+            image = QImage(self.canvas.size(), QImage.Format.Format_ARGB32)
+            image.fill(Qt.GlobalColor.white)
+
+            painter = QPainter(image)
+            self.canvas.render(image)
+            self.canvas.set_frame(i)
+            painter.end()
+
+
+            ptr = image.bits()
+            ptr = ptr[:image.sizeInBytes()]
+            pil_img = Image.frombytes("RGBA", (width, height), bytes(ptr))
+
+            pil_img = Image.frombytes("RGBA", (width, height), ptr)
+            frames.append(pil_img.convert("P"))
+
+        if not frames:
+            print("❌ No valid frames to export.")
+            return
+
+        frames[0].save(
+            "animation.gif",
+            save_all=True,
+            append_images=frames[1:],
+            duration=100,
+            loop=0
+        )
+        print("✅ Exported animation.gif successfully.")
 
 
 if __name__ == "__main__":
