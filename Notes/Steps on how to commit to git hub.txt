@@ -1,0 +1,25 @@
+How to add a file to your GitHub repository.
+
+    git add "name of the file you want to add"
+    git commit -m "name of the file you want to add also"
+    git push origin main
+
+and that does it
+
+and if you want to remove a file 
+    
+    git rm --cached "file-you-want-to-remove"
+
+does it.
+
+YOU CAN USE GIT BRANCH TO check where your codes are been commited to 
+
+To check the repo you are currently working on, you do this with
+
+git remote -v
+
+
+I can always check for the name of my file using(usually, this is file may not be recognised by git with the same name you think)
+
+git ls-file
+
