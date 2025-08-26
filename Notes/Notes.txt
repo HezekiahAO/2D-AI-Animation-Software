@@ -1,0 +1,8 @@
+Errors meaning in python
+"student is unbounded = You are trying to use a variable named student before giving it a value" or your shadowing yoour original list such as
+for student in student
+	print(student)
+
+There are custom fecth options such as fetch 
+
+You learn by doing, you learn syntax by writing, you learn words by saying	
