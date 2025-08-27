@@ -28,21 +28,19 @@ greet()
 #  Decorators in Python are a powerful feature that let you modify or extend the behavior of functions or classes without changing their actual code. 
 # They’re often used for logging, access control, memoization, and more.
 # The decorator wraps your function with extra behavior.
-=======
+
 print(5)
 
-def value():
+def value_1():
     yield 9
 
 
-gen = value()
+gen = value_1()
 print(next(gen))
 
 
 # Yes! In Python, generators are a type of iterable that allow you to iterate over a sequence of values lazily. This means they generate values one at a time as needed, rather than storing the entire sequence in memory at once. This can be very useful when working with large data sets)
 
-
-=======
 print(5)
 
 def value():
