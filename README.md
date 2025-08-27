@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 # 2D-AI-Animation-Software
 A 2D AI animation App, Desigined to to integrate AI into various animation levels such as Line Art, Inbetweening, and various other repetitive task.
 It aim to reduce animators works by 50%, allowing animators to focus on only important and critical aspect of animations such as 
@@ -18,7 +16,3 @@ It aim to reduce animators works by 50%, allowing animators to focus on only imp
 12 Solid Drawing.
 
 Currently, I've only developed the MVP version which allows you to draw, animate and review your animation.
-=======
-# Data-Epic-Assignment-on-Data-Types
-This repository is dedicated to Data Epic Assignment on Data Types 
->>>>>>> cd2a864 (Task 2 question 6.py)
