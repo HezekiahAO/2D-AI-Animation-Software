@@ -1,0 +1,211 @@
+import sys
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QLabel
+)
+from PySide6.QtGui import QPainter, QPen, QMouseEvent, QImage, QColor
+from PySide6.QtCore import Qt, QPoint, QTimer
+
+
+class DrawingCanvas(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setMinimumSize(800, 600)
+        self.setMouseTracking(True)
+
+        self.drawing = False
+        self.last_point = QPoint()
+
+        self.frames = [[]]  # list of frames -> paths -> points
+        self.current_frame = 0
+
+        # Onion skin settings
+        self.show_onion_skin = True
+        self.prev_opacity = 80
+        self.next_opacity = 60
+
+    def set_frame(self, index):
+        self.current_frame = index
+        if len(self.frames) <= index:
+            self.frames.extend([[] for _ in range(index - len(self.frames) + 1)])
+        self.update()
+
+    def get_frame_count(self):
+        return len(self.frames)
+
+    def mousePressEvent(self, event: QMouseEvent):
+        if event.button() == Qt.LeftButton:
+            self.drawing = True
+            self.last_point = event.position().toPoint()
+            self.frames[self.current_frame].append([self.last_point])
+
+    def mouseMoveEvent(self, event: QMouseEvent):
+        if self.drawing:
+            point = event.position().toPoint()
+            self.frames[self.current_frame][-1].append(point)
+            self.update()
+
+    def mouseReleaseEvent(self, event: QMouseEvent):
+        if event.button() == Qt.LeftButton:
+            self.drawing = False
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+
+        # 🧅 Previous frame onion skin
+        if self.show_onion_skin and self.current_frame > 0:
+            pen = QPen(QColor(150, 150, 150, self.prev_opacity), 2)
+            painter.setPen(pen)
+            for path in self.frames[self.current_frame - 1]:
+                for i in range(1, len(path)):
+                    painter.drawLine(path[i - 1], path[i])
+
+        # 🧅 Next frame onion skin
+        if (
+            self.show_onion_skin
+            and self.current_frame + 1 < len(self.frames)
+            and self.frames[self.current_frame + 1]
+        ):
+            pen = QPen(QColor(100, 180, 255, self.next_opacity), 2)
+            painter.setPen(pen)
+            for path in self.frames[self.current_frame + 1]:
+                for i in range(1, len(path)):
+                    painter.drawLine(path[i - 1], path[i])
+
+        # ✏️ Current frame
+        pen = QPen(Qt.black, 2)
+        painter.setPen(pen)
+        for path in self.frames[self.current_frame]:
+            for i in range(1, len(path)):
+                painter.drawLine(path[i - 1], path[i])
+
+    def undo_last_path(self):
+        if self.frames[self.current_frame]:
+            self.frames[self.current_frame].pop()
+            self.update()
+
+    def render_to_image(self):
+        image = QImage(self.size(), QImage.Format_ARGB32)
+        image.fill(Qt.white)
+        painter = QPainter(image)
+        self.render(painter)
+        painter.end()
+        return image
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Omega 2D Animator – MVP Level 3")
+
+        self.canvas = DrawingCanvas()
+        self.current_frame = 0
+
+        # UI Elements
+        self.frame_label = QLabel("Frame 1 / 1")
+
+        self.prev_btn = QPushButton("Prev")
+        self.next_btn = QPushButton("Next")
+        self.undo_btn = QPushButton("Undo")
+        self.play_btn = QPushButton("Play")
+        self.onion_btn = QPushButton("Toggle Onion Skin")
+
+        self.ai_cleanup_btn = QPushButton("AI Clean-Up")
+        self.ai_inbetween_btn = QPushButton("AI In-Between")
+
+        # Connections
+        self.prev_btn.clicked.connect(self.prev_frame)
+        self.next_btn.clicked.connect(self.next_frame)
+        self.undo_btn.clicked.connect(self.canvas.undo_last_path)
+        self.play_btn.clicked.connect(self.play_animation)
+        self.onion_btn.clicked.connect(self.toggle_onion_skin)
+
+        self.ai_cleanup_btn.clicked.connect(self.ai_cleanup)
+        self.ai_inbetween_btn.clicked.connect(self.ai_inbetween)
+
+        # Layout
+        top_layout = QHBoxLayout()
+        for btn in [
+            self.undo_btn,
+            self.prev_btn,
+            self.frame_label,
+            self.next_btn,
+            self.play_btn,
+            self.onion_btn,
+            self.ai_cleanup_btn,
+            self.ai_inbetween_btn,
+        ]:
+            top_layout.addWidget(btn)
+
+        layout = QVBoxLayout()
+        layout.addLayout(top_layout)
+        layout.addWidget(self.canvas)
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+
+        # Playback
+        self.is_playing = False
+        self.play_timer = QTimer()
+        self.play_timer.timeout.connect(self.next_frame)
+
+        self.update_frame_label()
+
+    def update_frame_label(self):
+        total = self.canvas.get_frame_count()
+        self.frame_label.setText(f"Frame {self.current_frame + 1} / {total}")
+
+    def prev_frame(self):
+        if self.current_frame > 0:
+            self.current_frame -= 1
+            self.canvas.set_frame(self.current_frame)
+            self.update_frame_label()
+
+    def next_frame(self):
+        next_index = self.current_frame + 1
+
+        if self.is_playing:
+            if next_index >= self.canvas.get_frame_count():
+                self.current_frame = 0
+            else:
+                self.current_frame = next_index
+        else:
+            self.current_frame = next_index
+
+        self.canvas.set_frame(self.current_frame)
+        self.update_frame_label()
+
+    def play_animation(self):
+        if self.play_timer.isActive():
+            self.play_timer.stop()
+            self.play_btn.setText("Play")
+            self.is_playing = False
+        else:
+            self.is_playing = True
+            self.play_timer.start(100)
+            self.play_btn.setText("Pause")
+
+    def toggle_onion_skin(self):
+        self.canvas.show_onion_skin = not self.canvas.show_onion_skin
+        self.canvas.update()
+
+    # 🤖 AI PLACEHOLDERS (IMPORTANT)
+    def ai_cleanup(self):
+        print("🤖 AI Clean-Up: converting rough frame to clean lineart (stub)")
+        image = self.canvas.render_to_image()
+        # Later: send `image` to ML model
+
+    def ai_inbetween(self):
+        print("🤖 AI In-Between: generating frames between current and next (stub)")
+        if self.current_frame + 1 >= self.canvas.get_frame_count():
+            print("❌ No next frame available")
+            return
+        # Later: send frame N and N+1 to ML model
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
