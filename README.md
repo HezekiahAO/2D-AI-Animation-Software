@@ -1,18 +1,16 @@
 # TweenCraft
-A 2D AI animation App, Desigined to to integrate AI into various animation levels such as Line Art, Inbetweening, and various other repetitive task.
-It aim to reduce animators works by 50%, allowing animators to focus on only important and critical aspect of animations such as 
+A 2D AI ehanced animation app, desigined to integrate AI into various animation levels such as Line Art, Inbetweening, and other repetitive parts of the animation.
+The aim of this is to reduce animators works by 50%, allowing animators to focus on only important and critical aspect of animations such as 
 
-1 ease in and ease out, 
-2 exageration, 
-3 sqush and streach, 
-4 Anticipation, 
-5 Staging, 
-6 Pose to Pose/Straight ahead animationm,  
-7 Follow Through,
-8 Arc
-9 Secondary Actions 
-10 Appel
-11 Timming 
-12 Solid Drawing.
-
-Currently, I've only developed the MVP version which allows you to draw, animate and review your animation.
+Ease in and Ease out, 
+Exageration, 
+Sqush and Streach, 
+Anticipation, 
+Staging, 
+Pose to Pose/Straight ahead animationm,  
+Follow Through,
+Arc,
+Secondary Actions,
+Appel,
+Timming,
+and Solid Drawing.
