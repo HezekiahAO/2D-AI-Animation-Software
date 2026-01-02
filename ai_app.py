@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel
 )
+from PySide6 import QtCore
 from PySide6.QtGui import QPainter, QPen, QMouseEvent, QImage, QColor
 from PySide6.QtCore import Qt, QPoint, QTimer
 
@@ -22,7 +23,7 @@ class DrawingCanvas(QWidget):
         # Onion skin settings
         self.show_onion_skin = True
         self.prev_opacity = 80
-        self.next_opacity = 60
+        self.next_opacity = 60              # Intentopnally Hardcoded for MVP
 
     def set_frame(self, index):
         self.current_frame = index
@@ -34,7 +35,7 @@ class DrawingCanvas(QWidget):
         return len(self.frames)
 
     def mousePressEvent(self, event: QMouseEvent):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self.drawing = True
             self.last_point = event.position().toPoint()
             self.frames[self.current_frame].append([self.last_point])
@@ -46,7 +47,7 @@ class DrawingCanvas(QWidget):
             self.update()
 
     def mouseReleaseEvent(self, event: QMouseEvent):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self.drawing = False
 
     def paintEvent(self, event):
@@ -73,7 +74,7 @@ class DrawingCanvas(QWidget):
                     painter.drawLine(path[i - 1], path[i])
 
         # ✏️ Current frame
-        pen = QPen(Qt.black, 2)
+        pen = QPen(Qt.GlobalColor.black, 2)
         painter.setPen(pen)
         for path in self.frames[self.current_frame]:
             for i in range(1, len(path)):
@@ -84,19 +85,27 @@ class DrawingCanvas(QWidget):
             self.frames[self.current_frame].pop()
             self.update()
 
-    def render_to_image(self):
+    def frame_to_image(self, index):
         image = QImage(self.size(), QImage.Format_ARGB32)
-        image.fill(Qt.white)
+        image.fill(Qt.GlobalColor.white)
+
         painter = QPainter(image)
-        self.render(painter)
+        pen = QPen(Qt.GlobalColor.black, 2)
+        painter.setPen(pen)
+        
+        if 0 <= index < len(self.frames):
+            for path in self.frames[index]:
+                for i in range(1, len(path)):
+                    painter.drawLine(path[i - 1], path[i])
+
         painter.end()
         return image
 
-
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Omega 2D Animator – MVP Level 3")
+        self.setWindowTitle("TweenCraft")
 
         self.canvas = DrawingCanvas()
         self.current_frame = 0
@@ -163,16 +172,11 @@ class MainWindow(QMainWindow):
             self.update_frame_label()
 
     def next_frame(self):
-        next_index = self.current_frame + 1
-
-        if self.is_playing:
-            if next_index >= self.canvas.get_frame_count():
-                self.current_frame = 0
-            else:
-                self.current_frame = next_index
+        if self.current_frame + 1 < self.canvas.get_frame_count():
+            self.current_frame += 1
         else:
-            self.current_frame = next_index
-
+            self.canvas.frames.append([])  # Add new blank frame
+            self.current_frame += 1
         self.canvas.set_frame(self.current_frame)
         self.update_frame_label()
 
@@ -190,16 +194,21 @@ class MainWindow(QMainWindow):
         self.canvas.show_onion_skin = not self.canvas.show_onion_skin
         self.canvas.update()
 
-    # 🤖 AI PLACEHOLDERS (IMPORTANT)
+    # AI PLACEHOLDERS (IMPORTANT)
     def ai_cleanup(self):
-        print("🤖 AI Clean-Up: converting rough frame to clean lineart (stub)")
-        image = self.canvas.render_to_image()
+        print("AI Clean-Up: converting rough frame to clean lineart (stub)")
+        image = self.canvas.frame_to_image(self.current_frame)
+
+        #For debugging: save image locally
+
+        image.save(f"clean_look frame_{self.current_frame + 1}")
+        print("AI image generated successfully")
         # Later: send `image` to ML model
 
     def ai_inbetween(self):
-        print("🤖 AI In-Between: generating frames between current and next (stub)")
+        print("AI In-Between: generating frames between current and next (stub)")
         if self.current_frame + 1 >= self.canvas.get_frame_count():
-            print("❌ No next frame available")
+            print("No next frame available")
             return
         # Later: send frame N and N+1 to ML model
 
