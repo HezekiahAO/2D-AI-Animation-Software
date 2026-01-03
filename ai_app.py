@@ -19,6 +19,7 @@ class DrawingCanvas(QWidget):
 
         self.frames = [[]]  # list of frames -> paths -> points
         self.current_frame = 0
+        self.redo_stack = []
 
         # Onion skin settings
         self.show_onion_skin = True
@@ -80,19 +81,19 @@ class DrawingCanvas(QWidget):
             for i in range(1, len(path)):
                 painter.drawLine(path[i - 1], path[i])
 
-        def undo_last_path(self):
-            if self.frames[self.current_frame]:
-                # Remove the path and save it to the redo stack
-                path = self.frames[self.current_frame].pop()
-                self.redo_stack.append(path) 
-                self.update()
+    def undo_last_path(self):
+        if self.frames[self.current_frame]:
+            # Remove the path and save it to the redo stack
+            path = self.frames[self.current_frame].pop()
+            self.redo_stack.append(path) 
+            self.update()
 
-        def redo_last_path(self):
-            if self.redo_stack:
-                # Take the last undid item and put it back
-                path = self.redo_stack.pop()
-                self.frames[self.current_frame].append(path)
-                self.update()
+    def redo_last_path(self):
+        if self.redo_stack:
+            # Take the last undid item and put it back
+            path = self.redo_stack.pop()
+            self.frames[self.current_frame].append(path)
+            self.update()
 
     def frame_to_image(self, index):
         image = QImage(self.size(), QImage.Format.Format_ARGB32)
