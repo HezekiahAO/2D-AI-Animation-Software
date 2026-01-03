@@ -117,6 +117,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("TweenCraft")
 
+
         self.canvas = DrawingCanvas()
         self.current_frame = 0
 
@@ -170,6 +171,16 @@ class MainWindow(QMainWindow):
         self.play_timer.timeout.connect(self.next_frame)
 
         self.update_frame_label()
+
+
+    
+    def last_drawn_frame_index(self):
+        for i in range(len(self.canvas.frames) - 1, -1, -1):
+            if self.canvas.frames[i]:
+                return i
+            return 0
+
+
 
     def update_frame_label(self):
         total = self.canvas.get_frame_count()
