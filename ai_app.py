@@ -53,7 +53,7 @@ class DrawingCanvas(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
 
-        # 🧅 Previous frame onion skin
+        # Previous frame onion skin
         if self.show_onion_skin and self.current_frame > 0:
             pen = QPen(QColor(150, 150, 150, self.prev_opacity), 2)
             painter.setPen(pen)
@@ -61,7 +61,7 @@ class DrawingCanvas(QWidget):
                 for i in range(1, len(path)):
                     painter.drawLine(path[i - 1], path[i])
 
-        # 🧅 Next frame onion skin
+        # Next frame onion skin
         if (
             self.show_onion_skin
             and self.current_frame + 1 < len(self.frames)
@@ -73,20 +73,29 @@ class DrawingCanvas(QWidget):
                 for i in range(1, len(path)):
                     painter.drawLine(path[i - 1], path[i])
 
-        # ✏️ Current frame
+        # Current frame
         pen = QPen(Qt.GlobalColor.black, 2)
         painter.setPen(pen)
         for path in self.frames[self.current_frame]:
             for i in range(1, len(path)):
                 painter.drawLine(path[i - 1], path[i])
 
-    def undo_last_path(self):
-        if self.frames[self.current_frame]:
-            self.frames[self.current_frame].pop()
-            self.update()
+        def undo_last_path(self):
+            if self.frames[self.current_frame]:
+                # Remove the path and save it to the redo stack
+                path = self.frames[self.current_frame].pop()
+                self.redo_stack.append(path) 
+                self.update()
+
+        def redo_last_path(self):
+            if self.redo_stack:
+                # Take the last undid item and put it back
+                path = self.redo_stack.pop()
+                self.frames[self.current_frame].append(path)
+                self.update()
 
     def frame_to_image(self, index):
-        image = QImage(self.size(), QImage.Format_ARGB32)
+        image = QImage(self.size(), QImage.Format.Format_ARGB32)
         image.fill(Qt.GlobalColor.white)
 
         painter = QPainter(image)
