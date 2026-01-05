@@ -37,6 +37,7 @@ class DrawingCanvas(QWidget):
 
     def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.MouseButton.LeftButton:
+            self.redo_stack.clear()  # Clear redo stack on new drawing
             self.drawing = True
             self.last_point = event.position().toPoint()
             self.frames[self.current_frame].append([self.last_point])
@@ -90,7 +91,7 @@ class DrawingCanvas(QWidget):
 
     def redo_last_path(self):
         if self.redo_stack:
-            # Take the last undid item and put it back
+            # Take the last undid item in the stack(Memory) and put it back
             path = self.redo_stack.pop()
             self.frames[self.current_frame].append(path)
             self.update()
@@ -121,22 +122,24 @@ class MainWindow(QMainWindow):
         self.canvas = DrawingCanvas()       # My main drawing canvas(Area)
         self.current_frame = 0            # Current frame index (number)
 
-        # UI Elements
+        # My UI Elements
         self.frame_label = QLabel("Frame 1 / 1")
 
         self.prev_btn = QPushButton("Prev")
         self.next_btn = QPushButton("Next")
         self.undo_btn = QPushButton("Undo")
+        self.redo_btn = QPushButton("Redo")
         self.play_btn = QPushButton("Play")
         self.onion_btn = QPushButton("Toggle Onion Skin")
 
         self.ai_cleanup_btn = QPushButton("AI Clean-Up")
         self.ai_inbetween_btn = QPushButton("AI In-Between")
 
-        # Connections
+        # My Connections
         self.prev_btn.clicked.connect(self.prev_frame)
         self.next_btn.clicked.connect(self.next_frame)
         self.undo_btn.clicked.connect(self.canvas.undo_last_path)
+        self.redo_btn.clicked.connect(self.canvas.redo_last_path)
         self.play_btn.clicked.connect(self.play_animation)
         self.onion_btn.clicked.connect(self.toggle_onion_skin)
 
@@ -147,6 +150,7 @@ class MainWindow(QMainWindow):
         top_layout = QHBoxLayout()
         for btn in [
             self.undo_btn,
+            self.redo_btn,
             self.prev_btn,
             self.frame_label,
             self.next_btn,
