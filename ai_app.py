@@ -17,8 +17,8 @@ class DrawingCanvas(QWidget):
         self.drawing = False
         self.last_point = QPoint()
 
-        self.frames = [[]]  # list of frames -> paths -> points
-        self.current_frame = 0
+        self.frames = [[]]  # list of frames (That has drawing paths or data)
+        self.current_frame = 0  # current frame index
         self.redo_stack = []
 
         # Onion skin settings
@@ -118,8 +118,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("TweenCraft")
 
 
-        self.canvas = DrawingCanvas()
-        self.current_frame = 0
+        self.canvas = DrawingCanvas()       # My main drawing canvas(Area)
+        self.current_frame = 0            # Current frame index (number)
 
         # UI Elements
         self.frame_label = QLabel("Frame 1 / 1")
@@ -172,19 +172,17 @@ class MainWindow(QMainWindow):
 
         self.update_frame_label()
 
-
-    
-    def last_drawn_frame_index(self):
-        for i in range(len(self.canvas.frames) - 1, -1, -1):
-            if self.canvas.frames[i]:
-                return i
-            return 0
-
-
-
     def update_frame_label(self):
         total = self.canvas.get_frame_count()
         self.frame_label.setText(f"Frame {self.current_frame + 1} / {total}")
+
+
+    def last_drawn_frame_index(self):
+        for i in range(len(self.canvas.frames) - 1, -1, -1):
+            if self.canvas.frames[i]:                           #Tells what the last drawn frame is
+                return i
+        return 0
+
 
     def prev_frame(self):
         if self.current_frame > 0:
@@ -193,13 +191,25 @@ class MainWindow(QMainWindow):
             self.update_frame_label()
 
     def next_frame(self):
-        if self.current_frame + 1 < self.canvas.get_frame_count():
-            self.current_frame += 1
+        if self.is_playing:
+            last_frame = self.last_drawn_frame_index()
+
+            if self.current_frame >= last_frame:
+                self.current_frame = 0
+            else:
+                self.current_frame += 1
+
         else:
-            self.canvas.frames.append([])  # Add new blank frame
-            self.current_frame += 1
+            # Manual navigation (editing mode)
+            if self.current_frame + 1 < self.canvas.get_frame_count():
+                self.current_frame += 1
+            else:
+                self.canvas.frames.append([])  # create new blank frame
+                self.current_frame += 1
+
         self.canvas.set_frame(self.current_frame)
         self.update_frame_label()
+
 
     def play_animation(self):
         if self.play_timer.isActive():
