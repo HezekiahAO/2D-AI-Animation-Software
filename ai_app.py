@@ -175,10 +175,24 @@ class MainWindow(QMainWindow):
         self.play_timer.timeout.connect(self.next_frame)
 
         self.update_frame_label()
+        self.update_frame_previews()
 
-    def update_frame_label(self):
-        total = self.canvas.get_frame_count()
-        self.frame_label.setText(f"Frame {self.current_frame + 1} / {total}")
+def update_frame_previews(self):
+    # Previous frame
+    if self.current_frame > 0:
+        prev_img = self.canvas.frame_to_image(self.current_frame - 1)
+        prev_img = prev_img.scaled(self.prev_frame_preview.size(), Qt.KeepAspectRatio)
+        self.prev_frame_preview.setPixmap(prev_img)
+    else:
+        self.prev_frame_preview.clear()
+
+    # Next frame
+    if self.current_frame + 1 < self.canvas.get_frame_count():
+        next_img = self.canvas.frame_to_image(self.current_frame + 1)
+        next_img = next_img.scaled(self.next_frame_preview.size(), Qt.KeepAspectRatio)
+        self.next_frame_preview.setPixmap(next_img)
+    else:
+        self.next_frame_preview.clear()
 
 
     def last_drawn_frame_index(self):
