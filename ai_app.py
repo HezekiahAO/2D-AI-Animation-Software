@@ -118,6 +118,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("TweenCraft")
 
+    
 
         self.canvas = DrawingCanvas()       # My main drawing canvas(Area)
         self.current_frame = 0            # Current frame index (number)
@@ -134,6 +135,16 @@ class MainWindow(QMainWindow):
 
         self.ai_cleanup_btn = QPushButton("AI Clean-Up")
         self.ai_inbetween_btn = QPushButton("AI In-Between")
+
+
+        # Frame previews
+        self.prev_frame_preview = QLabel()
+        self.prev_frame_preview.setFixedSize(100, 75)
+        self.prev_frame_preview.setStyleSheet("border: 1px solid gray;")
+        self.next_frame_preview = QLabel()
+        self.next_frame_preview.setFixedSize(100, 75)
+        self.next_frame_preview.setStyleSheet("border: 1px solid gray;")
+
 
         # My Connections
         self.prev_btn.clicked.connect(self.prev_frame)
@@ -165,6 +176,17 @@ class MainWindow(QMainWindow):
         layout.addLayout(top_layout)
         layout.addWidget(self.canvas)
 
+        # Previews Layout
+        layout.addWidget(self.canvas)
+
+        # Previews layout
+        previews_layout = QHBoxLayout()
+        previews_layout.addWidget(self.prev_frame_preview)
+        previews_layout.addStretch()
+        previews_layout.addWidget(self.next_frame_preview)
+        layout.addLayout(previews_layout)
+
+
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
@@ -174,57 +196,68 @@ class MainWindow(QMainWindow):
         self.play_timer = QTimer()
         self.play_timer.timeout.connect(self.next_frame)
 
-        self.update_frame_label()
+    
+    
+        self.update_frame_label() 
         self.update_frame_previews()
 
-def update_frame_previews(self):
-    # Previous frame
-    if self.current_frame > 0:
-        prev_img = self.canvas.frame_to_image(self.current_frame - 1)
-        prev_img = prev_img.scaled(self.prev_frame_preview.size(), Qt.KeepAspectRatio)
-        self.prev_frame_preview.setPixmap(prev_img)
-    else:
-        self.prev_frame_preview.clear()
+    def update_frame_previews(self):
+        if self.current_frame > 0:
+            prev_img = self.canvas.frame_to_image(self.current_frame - 1)
+            prev_img = prev_img.scaled(self.prev_frame_preview.size(), Qt.AspectRatioMode.KeepAspectRatio)
+            self.prev_frame_preview.setPixmap(prev_img)
+        else:
+            self.prev_frame_preview.clear()
 
-    # Next frame
-    if self.current_frame + 1 < self.canvas.get_frame_count():
-        next_img = self.canvas.frame_to_image(self.current_frame + 1)
-        next_img = next_img.scaled(self.next_frame_preview.size(), Qt.KeepAspectRatio)
-        self.next_frame_preview.setPixmap(next_img)
-    else:
-        self.next_frame_preview.clear()
+        if self.current_frame + 1 < self.canvas.get_frame_count():
+            next_img = self.canvas.frame_to_image(self.current_frame + 1)
+            next_img = next_img.scaled(self.next_frame_preview.size(), Qt.AspectRatioMode.KeepAspectRatio)
+            self.next_frame_preview.setPixmap(next_img)
+        else:
+            self.next_frame_preview.clear()
+
+        # Next frame
+        if self.current_frame + 1 < self.canvas.get_frame_count():
+            next_img = self.canvas.frame_to_image(self.current_frame + 1)
+            next_img = next_img.scaled(self.next_frame_preview.size(), Qt.KeepAspectRatio)
+            self.next_frame_preview.setPixmap(next_img)
+        else:
+            self.next_frame_preview.clear()
 
 
-    def last_drawn_frame_index(self):
-        for i in range(len(self.canvas.frames) - 1, -1, -1):
-            if self.canvas.frames[i]:                           #Tells what the last drawn frame is
-                return i
-        return 0
+        def last_drawn_frame_index(self):
+            for i in range(len(self.canvas.frames) - 1, -1, -1):
+                if self.canvas.frames[i]:                           #Tells what the last drawn frame is
+                    return i
+            return 0
+
 
 
     def prev_frame(self):
+
         if self.current_frame > 0:
+
             self.current_frame -= 1
+
             self.canvas.set_frame(self.current_frame)
+
             self.update_frame_label()
 
     def next_frame(self):
         if self.is_playing:
             last_frame = self.last_drawn_frame_index()
-
             if self.current_frame >= last_frame:
                 self.current_frame = 0
             else:
                 self.current_frame += 1
 
         else:
-            # Manual navigation (editing mode)
+                # Manual navigation (editing mode)
             if self.current_frame + 1 < self.canvas.get_frame_count():
                 self.current_frame += 1
             else:
                 self.canvas.frames.append([])  # create new blank frame
                 self.current_frame += 1
-
         self.canvas.set_frame(self.current_frame)
         self.update_frame_label()
 
