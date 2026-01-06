@@ -5,10 +5,12 @@ from PySide6.QtWidgets import (
 )
 from PySide6 import QtCore
 from PySide6.QtGui import QPainter, QPen, QMouseEvent, QImage, QColor
-from PySide6.QtCore import Qt, QPoint, QTimer
+from PySide6.QtCore import Qt, QPoint, QTimer, Signal
 
 
 class DrawingCanvas(QWidget):
+    frame_changed = Signal()
+
     def __init__(self):
         super().__init__()
         self.setMinimumSize(800, 600)
@@ -196,10 +198,16 @@ class MainWindow(QMainWindow):
         self.play_timer = QTimer()
         self.play_timer.timeout.connect(self.next_frame)
 
-    
+
     
         self.update_frame_label() 
         self.update_frame_previews()
+
+
+    def update_frame_label(self):
+        total_frames = self.canvas.get_frame_count()
+        self.frame_label.setText(f"Frame {self.current_frame + 1} / {total_frames}")
+
 
     def update_frame_previews(self):
         if self.current_frame > 0:
@@ -216,22 +224,13 @@ class MainWindow(QMainWindow):
         else:
             self.next_frame_preview.clear()
 
-        # Next frame
-        if self.current_frame + 1 < self.canvas.get_frame_count():
-            next_img = self.canvas.frame_to_image(self.current_frame + 1)
-            next_img = next_img.scaled(self.next_frame_preview.size(), Qt.KeepAspectRatio)
-            self.next_frame_preview.setPixmap(next_img)
-        else:
-            self.next_frame_preview.clear()
 
 
-        def last_drawn_frame_index(self):
-            for i in range(len(self.canvas.frames) - 1, -1, -1):
-                if self.canvas.frames[i]:                           #Tells what the last drawn frame is
-                    return i
-            return 0
-
-
+    def last_drawn_frame_index(self):
+        for i in range(len(self.canvas.frames) - 1, -1, -1):
+            if self.canvas.frames[i]:                           #Tells what the last drawn frame is
+                return i
+        return 0
 
     def prev_frame(self):
 
@@ -242,6 +241,7 @@ class MainWindow(QMainWindow):
             self.canvas.set_frame(self.current_frame)
 
             self.update_frame_label()
+            self.update_frame_previews()
 
     def next_frame(self):
         if self.is_playing:
@@ -252,15 +252,17 @@ class MainWindow(QMainWindow):
                 self.current_frame += 1
 
         else:
-                # Manual navigation (editing mode)
+                # Manual navigation in editing mode
             if self.current_frame + 1 < self.canvas.get_frame_count():
                 self.current_frame += 1
             else:
                 self.canvas.frames.append([])  # create new blank frame
                 self.current_frame += 1
+
+
         self.canvas.set_frame(self.current_frame)
         self.update_frame_label()
-
+        self.update_frame_previews()                        # This allocs me to see the next frame preview
 
     def play_animation(self):
         if self.play_timer.isActive():
@@ -276,7 +278,7 @@ class MainWindow(QMainWindow):
         self.canvas.show_onion_skin = not self.canvas.show_onion_skin
         self.canvas.update()
 
-    # AI PLACEHOLDERS (IMPORTANT)
+    # AI PLACEHOLDERS
     def ai_cleanup(self):
         print("AI Clean-Up: converting rough frame to clean lineart (stub)")
         image = self.canvas.frame_to_image(self.current_frame)
