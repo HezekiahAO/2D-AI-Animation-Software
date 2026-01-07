@@ -15,8 +15,7 @@ def qimage_to_cv(image: QImage):
     height = image.height()
 
     ptr = image.bits()
-    ptr.setsize(height * width * 4)
-    arr = np.frombuffer(ptr, np.uint8).reshape((height, width, 4))
+    arr = np.frombuffer(ptr, np.uint8, count=height * width * 4).reshape((height, width, 4))
     return cv2.cvtColor(arr, cv2.COLOR_RGBA2GRAY)
 
 
