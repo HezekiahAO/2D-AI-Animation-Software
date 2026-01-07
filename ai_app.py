@@ -1,4 +1,6 @@
 import sys
+import cv2
+import numpy as np
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel
@@ -6,6 +8,43 @@ from PySide6.QtWidgets import (
 from PySide6 import QtCore
 from PySide6.QtGui import QPainter, QPen, QMouseEvent, QImage, QColor
 from PySide6.QtCore import Qt, QPoint, QTimer, Signal
+
+def qimage_to_cv(image: QImage):
+    image = image.convertToFormat(QImage.Format.Format_RGBA8888)
+    width = image.width()
+    height = image.height()
+
+    ptr = image.bits()
+    ptr.setsize(height * width * 4)
+    arr = np.frombuffer(ptr, np.uint8).reshape((height, width, 4))
+    return cv2.cvtColor(arr, cv2.COLOR_RGBA2GRAY)
+
+
+def cv_to_qimage(gray):
+    h, w = gray.shape
+    return QImage(gray.data, w, h, w, QImage.Format.Format_Grayscale8)
+
+
+def ai_cleanup_opencv(image: QImage) -> QImage:
+    gray = qimage_to_cv(image)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    edges = cv2.Canny(blurred, 50, 150)
+    inverted = cv2.bitwise_not(edges)
+    return cv_to_qimage(inverted)
+
+
+def ai_generate_inbetweens(frame_a: QImage, frame_b: QImage, count=2):
+    a = qimage_to_cv(frame_a)
+    b = qimage_to_cv(frame_b)
+
+    results = []
+    for i in range(1, count + 1):
+        alpha = i / (count + 1)
+        blended = cv2.addWeighted(a, 1 - alpha, b, alpha, 0)
+        results.append(cv_to_qimage(blended))
+
+    return results
+
 
 
 class DrawingCanvas(QWidget):
@@ -278,23 +317,37 @@ class MainWindow(QMainWindow):
         self.canvas.show_onion_skin = not self.canvas.show_onion_skin
         self.canvas.update()
 
-    # AI PLACEHOLDERS
+    # AI PLACEHOLDERS, Might as well use OpenCV for this and PyTorch or TensorFlow for ML model integration
     def ai_cleanup(self):
-        print("AI Clean-Up: converting rough frame to clean lineart (stub)")
         image = self.canvas.frame_to_image(self.current_frame)
+        clean = ai_cleanup_opencv(image)
 
-        #For debugging: save image locally
+        clean.save(f"cleanup_frame_{self.current_frame}.png")
+        print("AI Clean-Up complete (OpenCV)")
+
 
         image.save(f"clean_look frame_{self.current_frame + 1}")
         print("AI image generated successfully")
         # Later: send `image` to ML model
 
     def ai_inbetween(self):
-        print("AI In-Between: generating frames between current and next (stub)")
         if self.current_frame + 1 >= self.canvas.get_frame_count():
             print("No next frame available")
             return
-        # Later: send frame N and N+1 to ML model
+
+        frame_a = self.canvas.frame_to_image(self.current_frame)
+        frame_b = self.canvas.frame_to_image(self.current_frame + 1)
+
+        inbetweens = ai_generate_inbetweens(frame_a, frame_b, count=2)
+
+        insert_index = self.current_frame + 1
+        for img in inbetweens:
+            self.canvas.frames.insert(insert_index, [])
+            img.save(f"inbetween_{insert_index}.png")
+            insert_index += 1
+
+        print("AI In-Between frames generated")
+
 
 
 if __name__ == "__main__":
