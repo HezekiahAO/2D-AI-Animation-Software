@@ -97,7 +97,7 @@ OpenCV advanced pipelines Edge detection, skeletonization, refinement
 Installation:
 1. Clone the repo:
 
-git clone https://github.com/your-username/tweencraft.git
+git clone [click here](https://github.com/HezekiahAO/2D-AI-Animation-Software.git)
 cd tweencraft
 
 2. Create a Virtual Environment
@@ -113,7 +113,7 @@ pip install -r requirements.txt
 python ai_app.py
 
 
-Project Structure:
+    Project Structure:
 
 tweencraft/
 │
@@ -153,7 +153,7 @@ Image-based processing using OpenCV
 Modular design for future ML models
 
 
-Performance & Scalability
+    Performance & Scalability
 
 Fast application startup
 
@@ -166,12 +166,12 @@ Architecture allows future batching, caching, and GPU acceleration
 The long-term goal is to scale from small animation tests to full scenes without compromising usability.
 
 
-Diversity & Inclusion Considerations
+    Diversity & Inclusion Considerations
 
 TweenCraft is designed to be accessible to animators regardless of technical background. The interface minimizes complexity, avoids jargon, and respects established animation workflows. By reducing repetitive labor, the tool supports healthier creative practices and makes animation more accessible to independent artists, students, and creators with limited resources.
 
 
-Team
+    Team
 
 Developer:
 This project is currently developed by a single creator with a background in:
@@ -184,7 +184,8 @@ Creative arts
 
 TweenCraft was born from firsthand awareness of both technical problem-solving and creative burnout in production workflows.
 
-Current Limitations
+
+    Current Limitations
 
 AI features are prototype-level
 
@@ -196,7 +197,7 @@ Designed for learning and iteration, not production deployment (yet)
 
 
 
-Future Enhancements
+    Future Enhancements
 
 Deep learning-based lineart extraction
 
@@ -211,14 +212,14 @@ Style consistency per project
 Plugin or pipeline integrations
 
 
-License
+    License
 
 This project is developed for educational, research, and hackathon demonstration purposes.
 The code is released under the MIT License.
 
 
 
-Note
+    Note
 
 TweenCraft is intentionally built to be understandable, hackable, and expandable.
 The focus is not perfection, but learning, iteration, and real creative impact.
