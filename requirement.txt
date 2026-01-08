@@ -6,3 +6,6 @@ opencv-python>=4.8.0
 
 # Numerical operations (used with OpenCV images)
 numpy>=1.23.0
+
+# How to runn this?
+pip install -r requirements.txt
