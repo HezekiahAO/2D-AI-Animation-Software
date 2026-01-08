@@ -10,11 +10,11 @@ Project Goals
 
 1 Reduce manual animation workload by up to 50%
 
-2    Assist (not replace) traditional 2D animation workflows
+2 Assist (not replace) traditional 2D animation workflows
 
-3   Provide a simple, animator-friendly interface
+3 Provide a simple, animator-friendly interface
 
-4    Build an understandable and extendable prototype for learning and iteration
+4 Build an understandable and extendable prototype for learning and iteration
 
 
 
@@ -22,11 +22,11 @@ Problem Statement
 
 Traditional 2D animation requires animators to repeatedly redraw similar frames for clean-up and in-betweening. This repetitive manual work leads to:
 
-    Artist fatigue and burnout
+Artist fatigue and burnout
 
-    Slower production timelines
+Slower production timelines
 
-    Reduced creative focus
+Reduced creative focus
 
 TweenCraft addresses this by introducing AI-assisted tools that automate repetitive steps while keeping the animator in full creative control.
 
@@ -97,8 +97,8 @@ OpenCV advanced pipelines Edge detection, skeletonization, refinement
 Installation:
 1. Clone the repo:
 
-git clone [click here](https://github.com/HezekiahAO/2D-AI-Animation-Software.git)
-cd tweencraft
+git clone https://github.com/HezekiahAO/2D-AI-Animation-Software.git
+then cd tweencraft
 
 2. Create a Virtual Environment
 
