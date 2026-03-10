@@ -1,6 +1,6 @@
 🎬 TweenCraft
 
-AI-Assisted 2D Animation Tool for Clean-Up & In-Betweening
+AI-Assisted 2D Animation Tool for Clean-Up & In-Betweening.
 
 TweenCraft is a Python-based desktop application designed to assist traditional 2D animators by reducing the most repetitive and time-consuming parts of the animation workflow specifically clean-up (lineart refinement) and in-between frame generation.
 
