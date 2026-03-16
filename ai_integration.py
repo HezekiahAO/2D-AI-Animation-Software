@@ -43,7 +43,7 @@ def image_to_image(
 #Run
 
 image_to_image(
-    prompt="clean up this sketch, keep the same character and pose, smooth lines, 2D animation style, increased resolution, line art",
+    prompt="clean up this sketch, keep the same character and pose, smooth lines, 2D animation style, increased resolution, line art" '2d animation' 'sketch' 'line art' 'clean up' 'single character' 'same pose',
     input_image_path=r"D:\Code 2025\TweenCraft\2D AI Aniamtion App\Exports\sword.png",
     output_image_path="output.png",
     strength=0.3,
