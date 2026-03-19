@@ -6,6 +6,7 @@ load_dotenv()
 
 KEY = os.getenv("STABILITY_KEY")
 
+# No module named pipreqs.__main__; 'pipreqs' is a package and cannot be directly executed
 
 def image_to_image(
         prompt: str,
